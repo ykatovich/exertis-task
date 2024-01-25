@@ -58,10 +58,10 @@ class ProcessCsvFilesCommand extends Command
 
                 array_map(fn($awardData) => Award::create($awardData), $awards);
 
-                $newFileName = $patternFileName['value'] . '_' . random_int(1, 99999) . '.csv';
+                $newFileName = uniqid($patternFileName['value'] . '_') . '.csv';
                 $newFilePath = $patternPath['value'] . '/' . $newFileName;
-                $oldFilePath = str_replace(storage_path() . '/app', '', $filePath);
-                Storage::move($oldFilePath, $newFilePath);
+
+                $this->fileService->storeSuccessProcessFile($newFilePath, $filePath);
 
                 File::create([
                     'file_path' => $newFilePath,
@@ -71,6 +71,9 @@ class ProcessCsvFilesCommand extends Command
                 $this->fileService->logSuccess($newFilePath, count($awards));
             } catch (\Exception $e) {
                 Log::error("Something wrong with data: " . $e->getMessage());
+
+                $this->fileService->storeFailedProcessFile($patternFileName['value'], $filePath);
+
                 $this->fileService->logError($filePath);
             }
         }

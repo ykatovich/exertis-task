@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\Log as OwnLog;
 use App\Models\Settings;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\UnavailableStream;
@@ -51,7 +52,7 @@ class FileService
         $patternPath = Settings::where('key', 'path')->first();
         $patternFileName = Settings::where('key', 'file_name_pattern')->first();
 
-        $fileName = $patternFileName['value'] . '_' . random_int(1,99999) . '.csv';
+        $fileName = uniqid($patternFileName['value'] . '_') . '.csv';
 
         $savedFile = $uploadedFile->storeAs($patternPath['value'], $fileName);
 
@@ -59,5 +60,20 @@ class FileService
             'file_path' => $savedFile,
             'stored_name' => $fileName,
         ]);
+    }
+
+    public function storeFailedProcessFile(string $patternFileName, string $filePath): void
+    {
+        $newFileName = 'failed_' . uniqid($patternFileName . '_') . '.csv';
+        $newFilePath = 'public' . '/' . 'failed_import' . '/' . $newFileName;
+        $oldFilePath = str_replace(storage_path() . '/app', '', $filePath);
+        Storage::move($oldFilePath, $newFilePath);
+
+    }
+
+    public function storeSuccessProcessFile(string $newFilePath, string $filePath): void
+    {
+        $oldFilePath = str_replace(storage_path() . '/app', '', $filePath);
+        Storage::move($oldFilePath, $newFilePath);
     }
 }
