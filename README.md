@@ -29,9 +29,10 @@ A small Laravel application, to consume and display free form CSV file  containi
 
 ## How to start
 
-1. ```php -S localhost:8000```
+1. ```composer install```
 2. ```Configure your .env```
-3. `` php artisan migrate --seed``
+3. ```php artisan migrate --seed```
+4. `` php -S localhost:8000``
 
 ## How to start scheduler
 
