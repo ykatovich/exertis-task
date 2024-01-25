@@ -18,12 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('components.loginOrRegister');
-});
 
 // AuthController
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.loginForm');
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('auth.loginForm');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('auth.registerForm');
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
@@ -31,17 +28,18 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware(['auth'])->group(function () {
 
-// AdminController
-Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
+    // AdminController
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::patch('/admin/update-settings', [AdminController::class, 'update'])->name('admin.update');
 
-// FileController
-Route::post('/upload', [FileController::class, 'upload'])->name('files.upload');
-Route::post('/manual-upload', [FileController::class, 'manualUpload'])->name('files.manualUpload');
+    // FileController
+    Route::post('/manual-upload', [FileController::class, 'manualUpload'])->name('files.manualUpload');
 
-// AwardController
-Route::get('/awards', [AwardController::class, 'showAwardList'])->name('awards.awardList');
+    // AwardController
+    Route::get('/awards', [AwardController::class, 'showAwardList'])->name('awards.awardList');
 
-// LogController
-Route::get('/logs', [LogController::class, 'showLogList'])->name('logs.logList');
+    // LogController
+    Route::get('/logs', [LogController::class, 'showLogList'])->name('logs.logList');
 
 });
