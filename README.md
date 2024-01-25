@@ -38,8 +38,16 @@ A small Laravel application, to consume and display free form CSV file  containi
 
 - Before starting the scheduler, create folders that we assume already exist. (and in import map we have csv files)
 
-    ```storage/app/public/import```
+```storage/app/public/import```
 
-    ```storage/app/public/failed_import```
+```storage/app/public/failed_import```
+
+- There are three files for testing in the project
+    - ``oscar_age_male1.csv``
+    - ``oscar_age_male2.csv``
+    - ``oWrongData.csv``
+
+And start scheduler
+
 1. ```php artisan schedule:work```
 
